@@ -46,14 +46,13 @@ def register() :
 			cursor = conn.cursor()
 
 			try :
-				sql = 'INSERT INTO personal_data ( name,  birthday, personalID, passportID, marrige, family, education, occupation ) values ( \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\" );'
-				# print( sql % ( form['name'], form['birthday'], form['personalID'], form['passportID'], form['marrige'], form['family'], form['education'], form['occupation'] ))
-				cursor.execute( sql % ( form['name'], form['birthday'], form['personalID'], form['passportID'], form['marrige'], form['family'], form['education'], form['occupation'] ))
-
-				sql = 'INSERT INTO contract_data ( name, contractAddress, contractABI, userToken ) values ( \"%s\", \"%s\", \"%s\", \"%s\" );'
+				sql = 'INSERT INTO personal_data ( userName,  birthday, personalID, passportID, marrige, family, education, occupation, password ) values ( \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\" );'
+				# print( sql % ( form['name'], form['birthday'], form['personalID'], form['passportID'], form['marrige'], form['family'], form['education'], form['occupation'] ))							
+				#cursor.execute( sql % ( form['name'], form['birthday'], form['personalID'], form['passportID'], form['marrige'], form['family'], form['education'], form['occupation'], form['password'] ))
+				cursor.execute( sql % ( form['name'], form['birthday'], form['personalID'], '', '', '', '', '', form['password'] ))
+				sql = 'INSERT INTO contract_data ( userName, contractAddress, contractABI, userToken ) values ( \"%s\", \"%s\", \"%s\", \"%s\" );'
 				# print( sql % ( form['name'], ID_Recognition_Contract.address, ID_Recognition_Contract.contractABI, registerTx ) )
 				cursor.execute( sql % ( form['name'], ID_Recognition_Contract.address, ID_Recognition_Contract.contractABI, registerTx ))
-				
 				conn.commit()
 
 			except Exception as e :
@@ -63,7 +62,6 @@ def register() :
 			finally:
 				cursor.close()
 				conn.close()
-
 
 			return redirect('/register/')
 
