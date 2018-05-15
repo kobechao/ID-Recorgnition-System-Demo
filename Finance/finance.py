@@ -4,25 +4,27 @@ import signal
 import sys
 
 
+# ==========
 def main() :
 
 	while True :
 		print( 'Press Ctrl+C To Stop Demo\n' )
 		userName = str( input("Please Type User's Name To Get Data: ") )
-		contractAddress, contractABI, userToken = getDataFromGovernment( userName )
+		contractAddress, contractABI, userToken = getContractDataFromGovernment( userName )
 		if all( [contractAddress, contractABI, userToken] ) :
-			ID_Recognition_Contract = getContract( contractAddress, contractABI )
-			test( ID_Recognition_Contract )
+			ID_Recognition_Contract = getContract( contractAddress, contractABI, userToken )
+			# test( ID_Recognition_Contract )
+			# getContractDataFromGovernment( userName, userToken )
 		else:
 			print( 'No Such User' )
 
 		time.sleep(0.5)
 	
 
-# =====================================
-def getDataFromGovernment( userName ) :
+# =============================================
+def getContractDataFromGovernment( userName ) :
 	
-	link = 'http://localhost:5000/contract'
+	link = 'http://localhost:5000/api/contract'
 	res = requests.post( link, { 'name': userName })
 
 	if res.status_code == 201 :
@@ -34,8 +36,23 @@ def getDataFromGovernment( userName ) :
 	return res['contractAddress'], res['contractABI'], res['userToken']
 
 
+# =============================================
+def getPersonalDataFromGovernmnet( userToken ) :
+	
+	link = 'http://localhost:5000/api/userdata'
+	res = requests.post( link, { 'token': userToken })
+	
+
+	if res.status_code == 201 :
+		res = res.json()
+		return True, res
+	else :
+		print ( res )
+		return False, res.status_code
+
+
 # ===============================================
-def getContract( contractAddress, contractABI ) :
+def getContract( contractAddress, contractABI, userToken ) :
 
 	from web3 import Web3, HTTPProvider, contract
 	from web3.contract import ConciseContract
@@ -45,17 +62,27 @@ def getContract( contractAddress, contractABI ) :
 	eth = web3.eth
 	assert web3.isConnected()
 	assert eth.accounts
+
 	contractABI = eval(contractABI) 
-
 	ID_Recognition_Contract = eth.contract( address=contractAddress, abi=contractABI, ContractFactoryClass=ConciseContract )
-	# _tx = ID_Recognition_Contract.getUserRegisterTable( "kobe" )
 
-	return ID_Recognition_Contract
+	governmentAddr = eth.accounts[0]
+	isValid = eth.getTransaction( userToken ).get('from') == governmentAddr
+
+	print( isValid )
+	if isValid :
+		res = getPersonalDataFromGovernmnet( userToken )
+		return res, isValid
+	else :
+		print( 'illegal' )
+		return None, isValid
+
 
 # ================================
 def signal_handler(signal, frame):
     print ('\nExit By Keyboad! Bye!' )
     sys.exit(0)
+
 
 # ==================================
 def test( ID_Recognition_Contract) :

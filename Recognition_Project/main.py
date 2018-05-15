@@ -40,17 +40,17 @@ def register() :
 			assert ID_Recognition_Contract.getUserRegisterTable( form.get( 'name', None ) ) == True
 			assert registerTx != None
 
-			print( registerTx )
+			# print( registerTx )
 
 			conn = connect_to_db()
 			cursor = conn.cursor()
 
 			try :
-				sql = 'INSERT INTO personal_data ( name,  birthday, personalID, passportID, marrige, family, education, occupation ) values ( \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\" );'
+				sql = 'INSERT INTO personal_data ( userName,  birthday, personalID, passportID, marrige, family, education, occupation ) values ( \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\" );'
 				# print( sql % ( form['name'], form['birthday'], form['personalID'], form['passportID'], form['marrige'], form['family'], form['education'], form['occupation'] ))
 				cursor.execute( sql % ( form['name'], form['birthday'], form['personalID'], form['passportID'], form['marrige'], form['family'], form['education'], form['occupation'] ))
 
-				sql = 'INSERT INTO contract_data ( name, contractAddress, contractABI, userToken ) values ( \"%s\", \"%s\", \"%s\", \"%s\" );'
+				sql = 'INSERT INTO contract_data ( userName, contractAddress, contractABI, userToken ) values ( \"%s\", \"%s\", \"%s\", \"%s\" );'
 				# print( sql % ( form['name'], ID_Recognition_Contract.address, ID_Recognition_Contract.contractABI, registerTx ) )
 				cursor.execute( sql % ( form['name'], ID_Recognition_Contract.address, ID_Recognition_Contract.contractABI, registerTx ))
 				
@@ -68,7 +68,7 @@ def register() :
 			return redirect('/register/')
 
 	else :
-		error = 'FUCK'
+		pass
 
 
 # Route: '/signin'
@@ -83,8 +83,8 @@ def logout() :
 	return redirect( '/register' )
 
 
-# Resuful URL: '/contract'
-@app.route('/contract', methods=['POST'])
+# Resuful URL: '/api/contract'
+@app.route('/api/contract', methods=['POST'])
 def getContractDataByName():
 
 	if request.method == 'POST':
@@ -95,7 +95,7 @@ def getContractDataByName():
 			conn = connect_to_db()
 			cursor = conn.cursor()
 
-			sql = 'SELECT contractAddress, contractABI, userToken FROM contract_data WHERE name=\'%s\';'
+			sql = 'SELECT contractAddress, contractABI, userToken FROM contract_data WHERE userName=\'%s\';'
 			cursor.execute( sql % form['name'] )
 
 			userData = cursor.fetchone()
@@ -109,6 +109,45 @@ def getContractDataByName():
 					'contractAddress': userData[0],
 					'contractABI': userData[1],
 					'userToken': userData[2],
+					}), 201
+
+		else:
+			abort(404)
+
+	else :
+		abort(404)
+
+
+# Resuful URL: '/api/userdata'
+@app.route('/api/userdata', methods=['POST'])
+def getUserDataByToken():
+
+	if request.method == 'POST':
+		form = request.form
+		print( form )
+		print( form.get('token', None) )
+
+		if form.get('token', None) :
+			conn = connect_to_db()
+			cursor = conn.cursor()
+
+			sql = "SELECT T1.userName, personalID, marrige, family, education, occupation FROM personal_data T1, contract_data T2 WHERE T1.userName = T2.userName and userToken = \'%s\' ;"
+			print( sql )
+			cursor.execute( sql % form['token'] )
+
+			userData = cursor.fetchone()
+			print( userData )
+
+			cursor.close()
+			conn.close()
+
+			return jsonify({
+					'userName': userData[0],
+					'personalID': userData[1],
+					'marrige': userData[2],
+					'family': userData[3],
+					'education': userData[4],
+					'occupation': userData[5],
 					}), 201
 
 		else:
