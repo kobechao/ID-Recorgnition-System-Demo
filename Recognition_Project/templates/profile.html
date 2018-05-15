@@ -34,11 +34,11 @@
         <!-- Sidebar Header    -->
         <div class="sidenav-header d-flex align-items-center justify-content-center">
           <!-- User Info-->
-          <div class="sidenav-header-inner text-center"><a href="/templates/profle.html"><img src="{{ url_for( 'static', filename='img/user-icon.png') }}" alt="person" class="img-fluid rounded-circle"></a>
+          <div class="sidenav-header-inner text-center"><a href="/profile"><img src="{{ url_for( 'static', filename='img/user-icon.png') }}" alt="person" class="img-fluid rounded-circle"></a>
             <h2 class="h5" id="username">Name</h2><span></span>
           </div>
           <!-- Small Brand information, appears on minimized sidebar-->
-          <div class="sidenav-header-logo"><a href="index.html" class="brand-small text-center"> <strong>I</strong><strong class="text-primary">D</strong></a></div>
+          <div class="sidenav-header-logo"><a href="/index" class="brand-small text-center"> <strong>I</strong><strong class="text-primary">D</strong></a></div>
         </div>
         <!-- Sidebar Navigation Menus-->
         <div class="main-menu">
@@ -57,7 +57,7 @@
         <nav class="navbar">
           <div class="container-fluid">
             <div class="navbar-holder d-flex align-items-center justify-content-between">
-              <div class="navbar-header"><a id="toggle-btn" href="#" class="menu-btn"><i class="icon-bars"> </i></a><a href="index.html" class="navbar-brand">
+              <div class="navbar-header"><a id="toggle-btn" href="#" class="menu-btn"><i class="icon-bars"> </i></a><a href="/profile" class="navbar-brand">
                   <div class="brand-text d-none d-md-inline-block"><strong class="text-primary">Profile</strong></div></a></div>
               <ul class="nav-menu list-unstyled d-flex flex-md-row align-items-md-center">
                 <!-- Notifications dropdown-->
@@ -92,28 +92,28 @@
             <div class="col-lg-12">
               <div class="card">
                 <div class="card-header d-flex align-items-center">
-                  <h4>All form elements</h4>
+                  <i class="fas fa-user fa-lg"></i>&nbsp&nbsp<h4>User Profile</h4>
                 </div>
                 <div class="card-body">
                   <form class="form-horizontal">
                     <div class="form-group row">
-                      <label class="col-sm-2 form-control-label">Normal</label>
+                      <label class="col-sm-2 form-control-label">身分證字號</label>
                       <div class="col-sm-10">
                         <input type="text" class="form-control">
                       </div>
                     </div>
                     <div class="line"></div>
                     <div class="form-group row">
-                      <label class="col-sm-2 form-control-label">Help text</label>
+                      <label class="col-sm-2 form-control-label">姓名</label>
                       <div class="col-sm-10">
-                        <input type="text" class="form-control"><span class="text-small text-gray help-block-none">A block of help text that breaks onto a new line and may extend beyond one line.</span>
+                        <input type="text" class="form-control">
                       </div>
                     </div>
                     <div class="line"></div>
                     <div class="form-group row">
-                      <label class="col-sm-2 form-control-label">Password</label>
+                      <label class="col-sm-2 form-control-label">生日</label>
                       <div class="col-sm-10">
-                        <input type="password" name="password" class="form-control">
+                        <input type="date" name="password" class="form-control">
                       </div>
                     </div>
                     <div class="line"></div>
@@ -380,7 +380,7 @@
               </div>
             </div>
           </div>
-        </div>
+        
       </section>
       <!-- Updates Section -->
       <footer class="main-footer">
