@@ -49,7 +49,31 @@ class ID_Recognition_Contract():
 		return _tx
 
 
-	
+def getContractDBData( personalID ):
+
+	import pymysql
+	conn = pymysql.connect( host='127.0.0.1', user='root', passwd='tina1633', db='DBO_BLOCKCHAIN')
+	cursor = conn.cursor()
+
+	sql = 'SELECT personalID, contractAddress, contractABI, userToken FROM contract_data WHERE personalID=\'%s\';'
+	cursor.execute( sql % personalID )
+
+	userData = cursor.fetchone()
+
+	cursor.close()
+	conn.close()
+
+	if userData :
+		return dict({
+			'personalID': userData[0],
+			'contractAddress': userData[1],
+			'contractABI': userData[2],
+			'userToken': userData[3],
+		})
+
+	else :
+		return None
+
 
 
 if __name__ == '__main__':
