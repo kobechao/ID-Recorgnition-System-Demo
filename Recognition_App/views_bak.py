@@ -5,22 +5,28 @@ from flask import ( Flask, request, session, g, redirect, url_for, abort, render
 from flask_script import Manager
 from flask_login import ( LoginManager, UserMixin, login_user, current_user,  login_required, logout_user )
 
-from models import User
-from ApiExecuter import ApiExecuter
-from contract import ID_Recognition_Contract, getContractDBData
+from .models import User
+from .ApiExecuter import ApiExecuter
+from .contract import ID_Recognition_Contract, getContractDBData
 
-app = Flask( __name__ )
+# from Recognition_App import app
+
+
+# app = Flask( __name__, instance_relative_config=True )
+# app.config.from_object( 'config' )
+# app.config.from_pyfile( 'config.py' )
+# app.secret_key = app.config['SECRET_KEY']
 # manager = Manager( app )
-
-app.secret_key = 'FUCKYOU'
 login_manager = LoginManager()
 login_manager.init_app( app )
+
+
 
 ID_Recognition_Contract = ID_Recognition_Contract()
 
 URLS_CONF = {
-	'BANK': 'http://localhost:8001/api/BankData',
-	# 'EDUCATION': 'http://localhost:8002/api/EducationData',
+	# 'BANK': 'http://localhost:8001/api/BankData',
+	'EDUCATION': 'http://localhost:8002/api/EducationData',
 }
 
 
@@ -32,6 +38,7 @@ def user_loader( user_id ):
 
 
 def connect_to_db() :
+	# conn = pymysql.connect( host=app.config['DB_HOST'], user=app.config['DB_USER'], passwd=app.config['DB_PASSWORD'], db=app.config['DB_SCHEMA'])
 	conn = pymysql.connect( host='127.0.0.1', user='root', passwd='tina1633', db='DBO_BLOCKCHAIN')
 	return conn
 
@@ -46,6 +53,7 @@ def index() :
 		print( 'Login as ' + current_user.id )
 		res = dict()
 		for department in URLS_CONF.keys():
+			print( department )
 			res[department] = ApiExecuter( URLS_CONF[department], getContractDBData( current_user.id ) ).getRespondData()
 
 		print( res )
@@ -82,7 +90,7 @@ def register() :
 
 			try :
 				sql = 'INSERT INTO personal_data ( userName,  birthday, personalID, marrige, family, education, occupation, password ) values ( \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\");'
-				print( sql % ( form['name'], form['birthday'], form['personalID'], '', '', '', '', form['password'] ))							
+				# print( sql % ( form['name'], form['birthday'], form['personalID'], '', '', '', '', form['password'] ))							
 				cursor.execute( sql % ( form['name'], form['birthday'], form['personalID'], '', '', '', '', form['password'] ))
 
 				sql = 'INSERT INTO contract_data ( personalID, contractAddress, contractABI, userToken ) values ( \"%s\", \"%s\", \"%s\", \"%s\" );'
@@ -108,17 +116,10 @@ def register() :
 # Route: '/login'
 # ================
 @app.route( '/login/', methods = ['GET', 'POST'] )
+@app.route( '/signin/', methods = ['GET', 'POST'] )
 def login() :
 	if request.method == 'GET' :
-		# return '''
-		#      <form method='POST'>
-		#      <input type='text' name='personalID' id='personalID' placeholder='personalID'/>
-		#      <input type='password' name='password' id='password' placeholder='password'/>
-		#      <input type='submit' name='submit'/>
-		#      </form>
-  #              '''
-  		return render_template( 'login.html' )
-  		
+		return render_template( 'login.html' )
 
 	elif request.method == 'POST':	
 		form = request.form
@@ -143,11 +144,11 @@ def login() :
 					return redirect( url_for('login') )
 
 				if personalID == userLoginData[0] and password == userLoginData[1] :
-					print( 'login success!!!' )
-
 					user = User()
 					user.id = personalID
 					login_user( user )
+
+					session['logged_in'] = True
 
 					return redirect( url_for('index') )
 
@@ -172,6 +173,7 @@ def login() :
 @login_required
 def logout() :
 	logout_user()
+	session.pop( 'logged_in', None )
 
 	return redirect( url_for('register') )
 
@@ -192,13 +194,15 @@ def not_found( error ) :
 @app.route('/tmp', methods=['GET'] )
 @login_required
 def test() :
-	if current_user.is_active:
-		return 'Login as ' + current_user.id
+	if current_user.is_active and session['logged_in']:
+		return 'Login as ' + current_user.id + '. ' + 'Session: ' + str( session['logged_in'] )
+
 	else :
 		return 'YO'
 
 
+@app.route('/profile')
+def profile () :
+	return render_template( 'profile.html')
 
-if __name__ == '__main__':
-	app.run( port=5000, debug=True )
-	# manager.run()
+

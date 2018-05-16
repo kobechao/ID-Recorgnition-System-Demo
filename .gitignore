@@ -60,6 +60,7 @@ local_settings.py
 
 # Flask stuff:
 instance/
+config.py
 .webassets-cache
 
 # Scrapy stuff:
@@ -91,10 +92,6 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-
-# Spyder project settings
-.spyderproject
-.spyproject
 
 # Rope project settings
 .ropeproject
@@ -140,3 +137,5 @@ docs/
 
 # Code coverage
 *.lst
+
+.vscode

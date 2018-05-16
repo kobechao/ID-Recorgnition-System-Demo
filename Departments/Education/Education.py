@@ -16,7 +16,7 @@ import pymysql
 app = Flask(__name__)
 
 
-@app.route('/api/BankData', methods=['POST'] )
+@app.route('/api/EducationData', methods=['POST'] )
 def BankData() :
 	if request.method == 'POST' :
 		form = request.form
@@ -30,10 +30,10 @@ def BankData() :
 		if all( [personalID, userToken, contractAddress, contractABI] ) :
 			if isValidUser( personalID, userToken, contractAddress, contractABI ) :
 				userData = getData( personalID )
-				return jsonify( userData )
+				return jsonify( userData, 201 )
 
 		else :
-			pass
+			return jsonify( { 'error': 'Not Found' }, 404 )
 
 		return False
 
@@ -60,7 +60,7 @@ def getData( personalID ):
 	conn = pymysql.connect( host='127.0.0.1', user='root', passwd='tina1633', db='DBO_BLOCKCHAIN')
 	cursor = conn.cursor()
 
-	sql = 'SELECT * FROM finance_data WHERE personalID=\'%s\''
+	sql = 'SELECT * FROM education_data WHERE personalID=\'%s\''
 	print( sql )
 	cursor.execute( sql % personalID )
 	data = cursor.fetchone()
@@ -70,13 +70,17 @@ def getData( personalID ):
 				'userName': data[1],
 				'personalID': data[2],
 				'birthday': data[3],
-				'bankAccount': data[4], 
-				'amount': data[5],
-			}), 201
+				'schoolName': data[4], 
+				'department': data[5],
+				'grade': data[6],
+			})
 	else :
 		return dict({
 				'error': 'No Such User',
-			}), 400
+			})
+
 
 if __name__ == '__main__':
-	app.run( port=8001, debug=True )
+	app.run( port=8002, debug=True )
+
+

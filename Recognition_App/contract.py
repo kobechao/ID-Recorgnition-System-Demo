@@ -29,7 +29,7 @@ class ID_Recognition_Contract():
 		print( '\nContract Deployed at\n%s\n%s\n' % ( self.address, '=' * len( self.address ) ) )
 
 	def get_Bytecode_ABI( self ) :
-		contractPath = ['contract/ID_Recognition.sol']
+		contractPath = ['Recognition_App/contract/ID_Recognition.sol']
 		compiledValues = list(compile_files( contractPath ).values())[0]
 		return compiledValues['bin'] ,compiledValues['abi']
 

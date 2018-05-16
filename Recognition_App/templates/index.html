@@ -132,6 +132,7 @@
         </nav>
       </header>
       <!-- Counts Section -->
+      {% if session.logged_in %}
       <section class="dashboard-counts section-padding">
         <div class="container-fluid">
           <div class="row">
@@ -192,6 +193,10 @@
           </div>
         </div>
       </section>
+      {% else %}
+      <h1>YOOOOOOO</h1>
+
+      {% endif %}
       <!-- Header Section-->
       <section class="dashboard-header section-padding">
         <div class="container-fluid">
