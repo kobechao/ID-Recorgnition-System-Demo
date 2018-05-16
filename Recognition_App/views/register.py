@@ -1,9 +1,11 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, redirect
 from .MYSQL import connect_to_db
 from Recognition_App.contract import ID_Recognition_Contract, getContractDBData
 
 
 REGISTER = Blueprint('register', __name__, template_folder='templates', static_folder='static')
+
+ID_Recognition_Contract = ID_Recognition_Contract()
 
 
 @REGISTER.route('/register/', methods=['GET', 'POST']) 
@@ -23,8 +25,8 @@ def register() :
 			return redirect( '/register')
 
 		else :
-			registerTx = ID_Recognition_Contract.setUserRegisterTable( userID=form['name'] ).hex()
-			assert ID_Recognition_Contract.getUserRegisterTable( userID=form['name'] ) == True
+			registerTx = ID_Recognition_Contract.setUserRegisterTable( userID=form['personalID'] ).hex()
+			assert ID_Recognition_Contract.getUserRegisterTable( userID=form['personalID'] ) == True
 			assert registerTx != None
 
 			conn = connect_to_db()
@@ -32,7 +34,6 @@ def register() :
 
 			try :
 				sql = 'INSERT INTO personal_data ( userName,  birthday, personalID, marrige, family, education, occupation, password ) values ( \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\");'
-				# print( sql % ( form['name'], form['birthday'], form['personalID'], '', '', '', '', form['password'] ))							
 				cursor.execute( sql % ( form['name'], form['birthday'], form['personalID'], '', '', '', '', form['password'] ))
 
 				sql = 'INSERT INTO contract_data ( personalID, contractAddress, contractABI, userToken ) values ( \"%s\", \"%s\", \"%s\", \"%s\" );'
@@ -52,3 +53,5 @@ def register() :
 
 	else :
 		pass
+
+

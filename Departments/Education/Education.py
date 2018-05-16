@@ -28,12 +28,12 @@ def BankData() :
 		contractABI = form.get( 'contractABI', None)
 
 		if all( [personalID, userToken, contractAddress, contractABI] ) :
-			if isValidUser( personalID, userToken, contractAddress, contractABI ) :
+			if all( isValidUser( personalID, userToken, contractAddress, contractABI ) ):
 				userData = getData( personalID )
-				return jsonify( userData, 201 )
+				return jsonify( userData )
 
 		else :
-			return jsonify( { 'error': 'Not Found' }, 404 )
+			return jsonify( { 'error': 'Not Found' } )
 
 		return False
 
@@ -46,14 +46,21 @@ def isValidUser( personalID, userToken, contractAddress, contractABI ) :
 	contractABI = eval(contractABI) 
 	ID_Recognition_Contract = eth.contract( address=contractAddress, abi=contractABI, ContractFactoryClass=ConciseContract )
 	
-	print( 'Checking Validity From Contract...')
+	print( 'Checking Contract %s Is Deployed By Government...' % contractAddress)	
 	
 	governmentAddr = eth.accounts[0]
-	isValid = eth.getTransaction( userToken ).get('from') == governmentAddr
+	isValidGovernment = eth.getTransaction( userToken ).get('from') == governmentAddr
 
-	print( 'Validity: ' + str( isValid ) )
+	print( 'isValidGovernment: ' + str( isValidGovernment ) + '\n' )
 
-	return isValid
+	print( 'Checking The User Is Registered In Contract By Token %s, ID %s...' % ( userToken, personalID ) )	
+	
+	isValidUser = ID_Recognition_Contract.getUserRegisterTable( personalID )
+
+	print( 'isValidUser: ' + str( isValidUser ) + '\n' )
+
+
+	return isValidGovernment, isValidUser
 
 
 def getData( personalID ):

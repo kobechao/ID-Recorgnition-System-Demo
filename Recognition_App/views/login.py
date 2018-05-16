@@ -1,6 +1,6 @@
-from flask import Blueprint, render_template, request, redirect, session
+from flask import ( Blueprint, render_template, request, redirect, session, url_for )
 from .MYSQL import connect_to_db
-from flask_login import ( login_user, current_user )
+from flask_login import ( login_user, current_user, logout_user, login_required )
 from Recognition_App.models import User
 
 LOGIN = Blueprint('login', __name__, template_folder='templates', static_folder='static')
@@ -25,13 +25,13 @@ def login() :
 
 			try:
 				sql = 'SELECT personalID, password FROM personal_data where personalID=\'%s\';' 
-				print( sql )
+				# print( sql )
 				cursor.execute( sql % personalID )
 				userLoginData = cursor.fetchone()
 
 				if userLoginData is None:
 					print( 'No Such User' )
-					return redirect( url_for('login') )
+					return redirect( url_for('login.login') )
 
 				if personalID == userLoginData[0] and password == userLoginData[1] :
 					user = User()
@@ -40,12 +40,12 @@ def login() :
 
 					session['logged_in'] = True
 
-					return redirect( url_for('index') )
+					return redirect( url_for('index.index') )
 
 				else :
 					
 					print( 'Wrong Password' )
-					return redirect( url_for('login') )
+					return redirect( url_for('login.login') )
 
 
 			except Exception as e:
@@ -54,5 +54,14 @@ def login() :
 			finally:
 				cursor.close()
 				conn.close()
+
+@LOGIN.route('/logout/')
+@login_required
+def logout() :
+	print('logout')
+	logout_user()
+	session.pop( 'logged_in', None )
+
+	return redirect( url_for('register.register') )
 
 
