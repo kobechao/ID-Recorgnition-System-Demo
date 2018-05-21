@@ -17,7 +17,8 @@ class ApiExecuter():
 				'contractABI': self.postdata['contractABI']
 			})
 
-		print( res.json )
+		print( res.json() )
+		print( '=' * len( str(res.json()) ) )
 
 		return res.json()
 

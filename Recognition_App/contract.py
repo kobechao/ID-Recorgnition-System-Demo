@@ -14,33 +14,47 @@ eth = web3.eth
 assert web3.isConnected()
 assert eth.accounts
 
+
 class ID_Recognition_Contract():
 
-	"""IDStorage_contract class in python"""
+	"""ID_Recognition_Contract class in python"""
 
 	def __init__( self ):
 		self.governmentAddr = eth.accounts[0]
 		self.contractBytecode, self.contractABI = self.get_Bytecode_ABI()
 		self.contract_Recognition = eth.contract( abi = self.contractABI, bytecode = self.contractBytecode )
 		self.contractHash = self.contract_Recognition.deploy( transaction = { "from": self.governmentAddr } )
-		self.receipt = eth.getTransactionReceipt( self.contractHash )
+		# self.receipt = eth.getTransactionReceipt( self.contractHash )
+		self.receipt = eth.waitForTransactionReceipt( self.contractHash )
 		self.address = self.receipt.get('contractAddress', None)
 
 		print( '\nContract Deployed at\n%s\n%s\n' % ( self.address, '=' * len( self.address ) ) )
 
 	def get_Bytecode_ABI( self ) :
 		contractPath = ['contract/ID_Recognition.sol']
+		if __name__ == 'Recognition_App.contract':
+			contractPath = ['Recognition_App/contract/ID_Recognition.sol']
+		
 		compiledValues = list(compile_files( contractPath ).values())[0]
 		return compiledValues['bin'] ,compiledValues['abi']
 
 
 	def setUserRegisterTable( self, userID ) :
-		_tx = self.contract_Recognition.transact( { 'from': self.governmentAddr, 'to': self.receipt['contractAddress'] } ).setUserRegisterTable( userID )
+		# _tx = self.contract_Recognition.transact( { 'from': self.governmentAddr, 'to': self.receipt['contractAddress'] } ).setUserRegisterTable( userID )
+		_tx = self.contract_Recognition.functions.setUserRegisterTable( userID ).transact( { 'from': self.governmentAddr, 'to': self.receipt['contractAddress'] } )
+		eth.waitForTransactionReceipt( _tx )
 		return _tx
 
 
 	def getUserRegisterTable( self, userID ) :
-		_tx = self.contract_Recognition.call( {  'to': self.receipt['contractAddress'] } ).getUserRegisterTable( userID )
+		# _tx = self.contract_Recognition.call( {  'to': self.receipt['contractAddress'] } ).getUserRegisterTable( userID )
+		_tx = self.contract_Recognition.functions.getUserRegisterTable( userID ).call( {  'to': self.receipt['contractAddress'] } )
+		return _tx
+
+
+	def isUserRegistered( self, userID ) :
+		# _tx = self.contract_Recognition.call( {  'to': self.receipt['contractAddress'] } ).getUserRegisterTable( userID )
+		_tx = self.contract_Recognition.functions.isUserRegistered( userID ).call( { 'from': self.governmentAddr, 'to': self.receipt['contractAddress'] } )
 		return _tx
 
 
@@ -72,19 +86,27 @@ def getContractDBData( personalID ):
 		})
 
 	else :
-		return None
+		return dict()
 
 
 
 if __name__ == '__main__':
 
 	# test()
-	contract = ID_Recognition_Contract()
-	tx = contract.setUserRegisterTable('123')
-	print( type(tx), len(tx.hex()) )
-	print( 'rawTx: ', web3.sha3( tx ))
-	print ( '123: ', contract.getUserRegisterTable('123'))
-	print ( 'receipt: ', contract.getTx(tx) )
+	ID_Recognition_contract = ID_Recognition_Contract()
+	tx = ID_Recognition_contract.setUserRegisterTable('A')
+	print( type(tx), len(tx.hex()), tx.hex() )
+	eth.waitForTransactionReceipt( tx )
+	# print ( 'receipt: ', ID_Recognition_contract.getTx(tx) )
+
+	import time
+	while True:
+		registered = ID_Recognition_contract.getUserRegisterTable('A')
+		print ( '123: ', registered )
+		if registered :
+			break
+		time.sleep(1)
+
 
 
 

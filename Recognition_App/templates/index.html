@@ -80,27 +80,34 @@
                   </ul>
                 </li>
                 <!-- Log out-->
-                <li class="nav-item"><a href="/login" class="nav-link logout"> <span class="d-none d-sm-inline-block">Logout</span><i class="fas fa-sign-out-alt"></i></a></li>
+                {% if session.logged_in %}
+                <li class="nav-item"><a href="{{ url_for('login.logout') }}" class="nav-link logout"> <span class="d-none d-sm-inline-block">Logout</span><i class="fas fa-sign-out-alt"></i></a></li>
+                {% else %}
+                <li class="nav-item"><a href="{{ url_for('login.login') }}" class="nav-link logout"> <span class="d-none d-sm-inline-block">Login</span><i class="fas fa-sign-out-alt"></i></a></li>
+                {% endif %}
               </ul>
             </div>
           </div>
         </nav>
       </header>
       <!-- Counts Section -->
+      {% if session.logged_in %}
       <section class="dashboard-counts section-padding">
         <div class="container-fluid">
           <div class="row">
-            <!-- Count item widget-->
+          {% for department, data in res.items() %}
             <div class="col-xl-2 col-md-4 col-6">
               <div class="wrapper count-title d-flex">
                 <div class="icon"><i class="icon-user"></i></div>
-                <div class="name"><strong class="text-uppercase">New Clients</strong><span>Last 7 days</span>
-                  <div class="count-number">25</div>
+                <div class="name"><strong class="text-uppercase">{{ department }}</strong>
+                <span>{{ data['personalID'] }}</span>
+                <span>{{ data['userName'] }}</span>
+                <div class="count-number">25</div>
                 </div>
               </div>
             </div>
-            <!-- Count item widget-->
-            <div class="col-xl-2 col-md-4 col-6">
+          {% endfor %}
+            <!-- <div class="col-xl-2 col-md-4 col-6">
               <div class="wrapper count-title d-flex">
                 <div class="icon"><i class="icon-padnote"></i></div>
                 <div class="name"><strong class="text-uppercase">Work Orders</strong><span>Last 5 days</span>
@@ -108,7 +115,6 @@
                 </div>
               </div>
             </div>
-            <!-- Count item widget-->
             <div class="col-xl-2 col-md-4 col-6">
               <div class="wrapper count-title d-flex">
                 <div class="icon"><i class="icon-check"></i></div>
@@ -117,7 +123,6 @@
                 </div>
               </div>
             </div>
-            <!-- Count item widget-->
             <div class="col-xl-2 col-md-4 col-6">
               <div class="wrapper count-title d-flex">
                 <div class="icon"><i class="icon-bill"></i></div>
@@ -126,7 +131,6 @@
                 </div>
               </div>
             </div>
-            <!-- Count item widget-->
             <div class="col-xl-2 col-md-4 col-6">
               <div class="wrapper count-title d-flex">
                 <div class="icon"><i class="icon-list"></i></div>
@@ -135,7 +139,6 @@
                 </div>
               </div>
             </div>
-            <!-- Count item widget-->
             <div class="col-xl-2 col-md-4 col-6">
               <div class="wrapper count-title d-flex">
                 <div class="icon"><i class="icon-list-1"></i></div>
@@ -143,10 +146,15 @@
                   <div class="count-number">70</div>
                 </div>
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
       </section>
+      {% else %}
+      <center>
+        <h1>NOT LOGIN YET</h1>
+      </center>
+      {% endif %}
       <!-- Header Section-->
       <section class="dashboard-header section-padding">
         <div class="container-fluid">
@@ -247,6 +255,16 @@
     <script src="{{ url_for('static', filename='js/charts-home.js') }}"></script>
     <!-- Main File-->
     <script src="{{ url_for('static', filename='js/front.js') }}"></script>
+
+    <script type="text/javascript">
+      {% with messages = get_flashed_messages() %} 
+        {% if messages %} 
+          {% for message in messages %}
+            alert( '{{message}}' )
+          {% endfor %} 
+        {% endif %} 
+      {% endwith %}
+    </script>
  
   </body>
 </html>
