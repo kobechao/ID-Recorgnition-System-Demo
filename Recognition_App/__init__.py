@@ -9,7 +9,7 @@ from Recognition_App.models import User
 app = Flask(__name__, instance_relative_config=True)
 app.register_blueprint( LOGIN )
 app.register_blueprint( REGISTER )
-app.register_blueprint( INDEX )
+app.register_blueprint( INDEX, url_prefix='/index' )
 
 
 login_manager = LoginManager()

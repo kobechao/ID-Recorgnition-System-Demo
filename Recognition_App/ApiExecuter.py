@@ -1,29 +1,22 @@
 class ApiExecuter():
 	"""
 	"""
-	def __init__(self, url, postdata):
+	def __init__(self, url, contractData, insertData=None):
 		self.url = url
-		assert type(postdata) == dict
-		self.postdata = postdata
-		self.respondData = self.getDBData()
+		assert type(contractData) == dict
+		self.contractData = contractData
+		self.insertData = insertData
+		self.postData = { **self.contractData, **self.insertData } if self.insertData else self.contractData
 
-	def getDBData( self ):
+
+	def getDBRespondData( self ):
 		import requests
-
-		res = requests.post( self.url, {
-				'personalID': self.postdata['personalID'],
-				'userToken': self.postdata['userToken'],
-				'contractAddress': self.postdata['contractAddress'],
-				'contractABI': self.postdata['contractABI']
-			})
-
+		res = requests.post( self.url, self.postData )
 		print( res.json() )
-		print( '=' * len( str(res.json()) ) )
+		print()
 
 		return res.json()
 
-	def getRespondData( self ):
-		return self.respondData
 
 
 
