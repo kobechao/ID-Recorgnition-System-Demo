@@ -61,6 +61,7 @@ def logout() :
 	print('logout')
 	logout_user()
 	session.pop( 'logged_in', None )
+	session.pop( 'userid', None )
 
 	return redirect( url_for('register.register') )
 

@@ -22,6 +22,8 @@ def EducationData( url_implement ) :
 	if request.method == 'POST' :
 		form = request.form
 
+		# print( form )
+
 		personalID = form.get( 'personalID', None )
 		userToken = form.get( 'userToken', None )
 		contractAddress = form.get( 'contractAddress', None )
@@ -37,9 +39,9 @@ def EducationData( url_implement ) :
 				return jsonify( userData )
 
 			elif url_implement == 'insertUserData' :
-				userName = form.get( 'userName', None )
+				userName = form.get( 'name', None )
 				birthday = form.get( 'birthday', None )
-				schoolName = form.get( 'schoolName', None )
+				schoolName = form.get( 'school', None )
 				department = form.get( 'department', None )
 				grade = form.get( 'grade', None )
 
@@ -104,7 +106,22 @@ def getData( personalID ):
 
 
 def insertData( personalID, userName, birthday, schoolName, department, grade ):
-	pass
+	conn = pymysql.connect( host='127.0.0.1', user='root', passwd='tina1633', db='DBO_BLOCKCHAIN')
+	cursor = conn.cursor()
+
+	try :
+		sql = "INSERT INTO education_data (userName, personalID, birthday, schoolName, department, grade) VALUES (\"%s\", \"%s\", \"%s\", \"%s\", \"%s\",\"%s\");"
+		cursor.execute( sql % ( userName, personalID, birthday, schoolName, department, grade ) )
+
+		conn.commit()
+
+	except Exception as e :
+		print( e )
+
+	finally:
+		cursor.close()
+		conn.close()
+		return True
 
 
 if __name__ == '__main__':

@@ -44,9 +44,9 @@
         <div class="main-menu">
           <h5 class="sidenav-heading">Main</h5>
           <ul id="side-main-menu" class="side-menu list-unstyled">                  
-            <li><a href="/index"> <i class="fas fa-home"></i>Home</a></li>
-            <li><a href="/bank"><i class="fas fa-university"></i>Bank</a></li>
-            <li><a href="/education"> <i class="fas fa-graduation-cap"></i>Education</a></li>
+            <li><a href="{{ url_for('index.index') }}"> <i class="fas fa-home"></i>Home</a></li>
+            <li><a href="{{ url_for('index.institutionRegistration', url_institution='bank' ) }}"><i class="fas fa-university"></i>Bank</a></li>
+            <li><a href="{{ url_for('index.institutionRegistration', url_institution='education' ) }}"> <i class="fas fa-graduation-cap"></i>Education</a></li>
           </ul>
         </div>
       </div>
@@ -87,6 +87,7 @@
         </nav>
       </header>
       <!-- Header Section-->
+      {% if session.logged_in %}
       <section class="dashboard-header section-padding">
         <div class="container-fluid">
             <div class="col-lg-12">
@@ -95,11 +96,11 @@
                   <i class="fas fa-user fa-lg"></i>&nbsp&nbsp<h4>校籍資料</h4>
                 </div>
                 <div class="card-body">
-                  <form class="form-horizontal">
+                  <form class="form-horizontal" method="POST">
                     <div class="form-group row">
                       <label class="col-sm-2 form-control-label">身分證字號</label>
                       <div class="col-sm-10">
-                        <input type="text" class="form-control" name="personalID" id="personalID">
+                        <input type="text" class="form-control" name="personalID" id="personalID" placeholder="{{ session['userid'] }}" disabled>
                       </div>
                     </div>
                     <div class="line"></div>
@@ -113,28 +114,28 @@
                     <div class="form-group row">
                       <label class="col-sm-2 form-control-label">生日</label>
                       <div class="col-sm-10">
-                        <input type="date" name="password" class="form-control" name="birthday" id="birthday">
+                        <input type="date" class="form-control" name="birthday" id="birthday">
                       </div>
                     </div>
                     <div class="line"></div>
                     <div class="form-group row">
                       <label class="col-sm-2 form-control-label">校名</label>
                       <div class="col-sm-10">
-                        <input type="text" name="text" class="form-control" name="school" id="school">
+                        <input type="text" class="form-control" name="school" id="school">
                       </div>
                     </div>
                     <div class="line"></div>
                     <div class="form-group row">
                       <label class="col-sm-2 form-control-label">系所</label>
                       <div class="col-sm-10">
-                        <input type="text" name="text" class="form-control" name="department" id="department">
+                        <input type="text" class="form-control" name="department" id="department">
                       </div>
                     </div>
                     <div class="line"></div>
                     <div class="form-group row">
                       <label class="col-sm-2 form-control-label">成績</label>
                       <div class="col-sm-10">
-                        <input type="text" name="text" class="form-control" name="grade" id="grade">
+                        <input type="text" class="form-control" name="grade" id="grade">
                       </div>
                     </div>
                     <div class="line"></div>
@@ -158,6 +159,11 @@
           </div>
         
       </section>
+      {% else %}
+        <center>
+          <h1>NOT LOGIN YET</h1>
+        </center>
+      {% endif %}
       <!-- Updates Section -->
       <footer class="main-footer">
         <div class="container-fluid">
@@ -185,5 +191,15 @@
     <!-- Main File-->
     <script src="{{ url_for('static', filename='js/front.js') }}"></script>
  
+    <script type="text/javascript">
+      {% with messages = get_flashed_messages() %} 
+        {% if messages %} 
+          {% for message in messages %}
+            alert( '{{message}}' )
+          {% endfor %} 
+        {% endif %} 
+      {% endwith %}
+    </script>
+    
   </body>
 </html>

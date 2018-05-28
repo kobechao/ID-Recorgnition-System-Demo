@@ -27,6 +27,7 @@ def index() :
 
 		print( res )
 		flash( 'Login as ' + current_user.id )
+		session['userid'] = current_user.id
 
 		return render_template('index.html', res=res )
 	
@@ -42,13 +43,16 @@ def institutionRegistration( url_institution ) :
 	if current_user.is_active and session['logged_in']:
 		if request.method == 'POST':
 			form = dict(request.form)
+			# print( form )
 			res = ApiExecuter( URLS_CONF[ institution ] + '/insertUserData', getContractDBData( current_user.id ), form ).getDBRespondData()
-			return 'POST, %s, Login as %s' %( institution, current_user.id  )
+
+			flash( 'Apply success!')
+			return redirect( url_for('index.institutionRegistration', url_institution='bank') )
 
 		else :
 			res = ApiExecuter( URLS_CONF[ institution ] + '/insertUserData', getContractDBData( current_user.id ), {'userName': 'kobe', 'birthday':'1996/09/23'} ).getDBRespondData()
-			# print( res )
-			return 'GET, %s, Login as %s' %( institution, current_user.id  )
+			
+			return render_template( '%s.html' % url_institution )
 
 	else :
 		return 'NOT LOGIN'

@@ -20,7 +20,7 @@ def register() :
 		form = request.form
 		print( 'post:', form)
 
-		if ID_Recognition_Contract.getUserRegisterTable( userID=form['name'] ) :
+		if ID_Recognition_Contract.getUserRegisterTable( userID=form['personalID'] ) :
 			flash( 'Has Data' )
 			return redirect( '/register')
 

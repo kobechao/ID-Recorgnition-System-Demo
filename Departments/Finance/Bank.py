@@ -22,6 +22,8 @@ def BankData( url_implement ) :
 	if request.method == 'POST' :
 		form = request.form
 
+		# print( form )
+
 		personalID = form.get( 'personalID', None )
 		userToken = form.get( 'userToken', None )
 		contractAddress = form.get( 'contractAddress', None )
@@ -37,10 +39,12 @@ def BankData( url_implement ) :
 				return jsonify( userData )
 
 			elif url_implement == 'insertUserData' :
-				userName = form.get( 'userName', None )
+				userName = form.get( 'name', None )
 				birthday = form.get( 'birthday', None )
+				bankAccount = form.get( 'bankAccount', None )
+				amount = form.get( 'amount', None )
 
-				insertData( personalID, userName, birthday )
+				insertData( personalID, userName, birthday, bankAccount, amount )
 				return jsonify( {'BANK': 'test'} )
 
 			else :
@@ -97,8 +101,24 @@ def getData( personalID ):
 				'error': 'No Such User',
 			})
 
-def insertData( personalID, userName, birthday ):
-	pass
+def insertData( personalID, userName, birthday, bankAccount, amount ):
+	conn = pymysql.connect( host='127.0.0.1', user='root', passwd='tina1633', db='DBO_BLOCKCHAIN')
+	cursor = conn.cursor()
+
+	try :
+		sql = "INSERT INTO finance_data (userName, personalID, birthday, bankAccount, amount) VALUES (\"%s\", \"%s\", \"%s\", \"%s\", \"%s\");"
+		cursor.execute( sql % ( userName, personalID, birthday, bankAccount, amount ) )
+
+		conn.commit()
+
+	except Exception as e :
+		print( e )
+
+	finally:
+		cursor.close()
+		conn.close()
+		return True
+
 
 if __name__ == '__main__':
 	app.run( port=8001, debug=True )
