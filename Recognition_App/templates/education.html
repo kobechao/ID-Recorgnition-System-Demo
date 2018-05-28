@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>申請校籍資料</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+     
+    <!-- Bootstrap CSS-->
+    <link rel="stylesheet" href="{{ url_for( 'static', filename='css/bootstrap.min.css' )}}">
+    <!-- Font Awesome CSS-->
+    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css">
+    <link rel="stylesheet" href="{{ url_for( 'static', filename='css/font-awesome.min.css' )}}">
+     
+    <!-- Fontastic Custom icon font-->
+    <link rel="stylesheet" href="{{ url_for( 'static', filename='css/fontastic.css' )}}">
+  
+    <!-- jQuery Circle-->
+    <link rel="stylesheet" href="{{ url_for( 'static', filename='css/grasp_mobile_progress_circle-1.0.0.min.css' )}}">
+    <!-- Custom Scrollbar-->
+    <link rel="stylesheet" href="{{ url_for( 'static', filename='css/jquery.mCustomScrollbar.css' )}}">
+    <!-- theme stylesheet-->
+    <link rel="stylesheet" href="{{ url_for( 'static', filename='css/style.default.css' )}}">
+    <!-- Custom stylesheet - for your changes-->
+    <link rel="stylesheet" href="{{ url_for( 'static', filename='css/custom.css') }}">
+    <!-- Favicon-->
+    <link rel="shortcut icon" href="{{ url_for( 'static', filename='img/favicon.ico') }}">
+  </head>
+  <body>
+    <!-- Side Navbar -->
+    <nav class="side-navbar">
+      <div class="side-navbar-wrapper">
+        <!-- Sidebar Header    -->
+        <div class="sidenav-header d-flex align-items-center justify-content-center">
+          <!-- User Info-->
+          <div class="sidenav-header-inner text-center"><a href="/profile"><img src="{{ url_for( 'static', filename='img/user-icon.png') }}" alt="person" class="img-fluid rounded-circle"></a>
+            <h2 class="h5" id="username">Name</h2><span></span>
+          </div>
+          <!-- Small Brand information, appears on minimized sidebar-->
+          <div class="sidenav-header-logo"><a href="/index" class="brand-small text-center"> <strong>I</strong><strong class="text-primary">D</strong></a></div>
+        </div>
+        <!-- Sidebar Navigation Menus-->
+        <div class="main-menu">
+          <h5 class="sidenav-heading">Main</h5>
+          <ul id="side-main-menu" class="side-menu list-unstyled">                  
+            <li><a href="/index"> <i class="fas fa-home"></i>Home</a></li>
+            <li><a href="/bank"><i class="fas fa-university"></i>Bank</a></li>
+            <li><a href="/education"> <i class="fas fa-graduation-cap"></i>Education</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="page">
+      <!-- navbar-->
+      <header class="header">
+        <nav class="navbar">
+          <div class="container-fluid">
+            <div class="navbar-holder d-flex align-items-center justify-content-between">
+              <div class="navbar-header"><a id="toggle-btn" href="#" class="menu-btn"><i class="icon-bars"> </i></a><a href="/profile" class="navbar-brand">
+                  <div class="brand-text d-none d-md-inline-block"><strong class="text-primary">學習履歷</strong></div></a></div>
+              <ul class="nav-menu list-unstyled d-flex flex-md-row align-items-md-center">
+                <!-- Notifications dropdown-->
+                <li class="nav-item dropdown"> <a id="notifications" rel="nofollow" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link"><i class="fa fa-bell"></i></a>
+                  <ul aria-labelledby="notifications" class="dropdown-menu">
+                    <li><a rel="nofollow" href="#" class="dropdown-item all-notifications text-center"> <strong> <i class="fa fa-bell"></i>No notifications</strong></a></li>
+                  </ul>
+                </li>
+                <!-- Messages dropdown-->
+                <li class="nav-item dropdown"> <a id="messages" rel="nofollow" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link"><i class="fa fa-envelope"></i></a>
+                  <ul aria-labelledby="notifications" class="dropdown-menu"> 
+                    <li><a rel="nofollow" href="#" class="dropdown-item all-notifications text-center"> <strong> <i class="fa fa-envelope"></i>No messages</strong></a></li>
+                  </ul>
+                </li>
+                <!-- Languages dropdown    -->
+                <li class="nav-item dropdown"><a id="languages" rel="nofollow" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link language dropdown-toggle"><img src="{{ url_for( 'static', filename='img/flags/16/TW.png') }}" alt="Taiwan"><span class="d-none d-sm-inline-block">Taiwan</span></a>
+                  <ul aria-labelledby="languages" class="dropdown-menu">
+                    <li><a rel="nofollow" href="#" class="dropdown-item"> <img src="{{ url_for( 'static', filename='img/flags/16/US.png') }}" alt="English" class="mr-2"><span>USA</span></a></li>
+                    <li><a rel="nofollow" href="#" class="dropdown-item"> <img src="{{ url_for( 'static', filename='img/flags/16/JP.png') }}" alt="Japanines" class="mr-2"><span>Japan</span></a></li>
+                  </ul>
+                </li>
+                <!-- Log out-->
+                <li class="nav-item"><a href="/logout" class="nav-link logout"> <span class="d-none d-sm-inline-block">Logout</span><i class="fas fa-sign-out-alt"></i></a></li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      </header>
+      <!-- Header Section-->
+      <section class="dashboard-header section-padding">
+        <div class="container-fluid">
+            <div class="col-lg-12">
+              <div class="card">
+                <div class="card-header d-flex align-items-center">
+                  <i class="fas fa-user fa-lg"></i>&nbsp&nbsp<h4>校籍資料</h4>
+                </div>
+                <div class="card-body">
+                  <form class="form-horizontal">
+                    <div class="form-group row">
+                      <label class="col-sm-2 form-control-label">身分證字號</label>
+                      <div class="col-sm-10">
+                        <input type="text" class="form-control" name="personalID" id="personalID">
+                      </div>
+                    </div>
+                    <div class="line"></div>
+                    <div class="form-group row">
+                      <label class="col-sm-2 form-control-label">姓名</label>
+                      <div class="col-sm-10">
+                        <input type="text" class="form-control" name="name" id="name">
+                      </div>
+                    </div>
+                    <div class="line"></div>
+                    <div class="form-group row">
+                      <label class="col-sm-2 form-control-label">生日</label>
+                      <div class="col-sm-10">
+                        <input type="date" name="password" class="form-control" name="birthday" id="birthday">
+                      </div>
+                    </div>
+                    <div class="line"></div>
+                    <div class="form-group row">
+                      <label class="col-sm-2 form-control-label">校名</label>
+                      <div class="col-sm-10">
+                        <input type="text" name="text" class="form-control" name="school" id="school">
+                      </div>
+                    </div>
+                    <div class="line"></div>
+                    <div class="form-group row">
+                      <label class="col-sm-2 form-control-label">系所</label>
+                      <div class="col-sm-10">
+                        <input type="text" name="text" class="form-control" name="department" id="department">
+                      </div>
+                    </div>
+                    <div class="line"></div>
+                    <div class="form-group row">
+                      <label class="col-sm-2 form-control-label">成績</label>
+                      <div class="col-sm-10">
+                        <input type="text" name="text" class="form-control" name="grade" id="grade">
+                      </div>
+                    </div>
+                    <div class="line"></div>
+                    <div class="form-group row">
+                      <label class="col-sm-2 form-control-label">登入密碼</label>
+                      <div class="col-sm-10">
+                        <input type="password" name="password" class="form-control" id="password">
+                      </div>
+                    </div>
+                    <div class="line"></div>
+                    <div class="form-group row">
+                      <div class="col-sm-4 offset-sm-2">
+                        <button type="submit" class="btn btn-secondary">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        
+      </section>
+      <!-- Updates Section -->
+      <footer class="main-footer">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-sm-6">
+              <p>NTUT IFM &copy; 2018</p>
+            </div>
+            <div class="col-sm-6 text-right">
+              <p>Design by <a href="https://www.facebook.com/chung.h.lin.9" class="external">NTUT IFM JyunHao</a></p>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+    <!-- JavaScript files-->
+  
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/umd/popper.min.js') }}"> </script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/grasp_mobile_progress_circle-1.0.0.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.cookie.js') }}"> </script>
+    <script src="{{ url_for('static', filename='js/Chart.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.validate.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.mCustomScrollbar.concat.min.js') }}"></script>
+    <!-- Main File-->
+    <script src="{{ url_for('static', filename='js/front.js') }}"></script>
+ 
+  </body>
+</html>
