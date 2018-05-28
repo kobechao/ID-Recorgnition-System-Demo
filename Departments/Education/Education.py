@@ -16,26 +16,42 @@ import pymysql
 app = Flask(__name__)
 
 
-@app.route('/api/EducationData', methods=['POST'] )
-def BankData() :
+@app.route('/api/EducationData/<url_implement>', methods=['POST'] )
+def EducationData( url_implement ) :
+	# print( url_implement )
 	if request.method == 'POST' :
 		form = request.form
-		# print( form )
 
 		personalID = form.get( 'personalID', None )
 		userToken = form.get( 'userToken', None )
 		contractAddress = form.get( 'contractAddress', None )
 		contractABI = form.get( 'contractABI', None)
+		
+		assert all( [personalID, userToken, contractAddress, contractABI] )
 
-		if all( [personalID, userToken, contractAddress, contractABI] ) :
-			if all( isValidUser( personalID, userToken, contractAddress, contractABI ) ):
+		if all( isValidUser( personalID, userToken, contractAddress, contractABI ) ):
+			val = form.get( 'value', None )
+
+			if url_implement == 'getUserData' :
 				userData = getData( personalID )
 				return jsonify( userData )
 
-		else :
-			return jsonify( { 'error': 'Not Found' } )
+			elif url_implement == 'insertUserData' :
+				userName = form.get( 'userName', None )
+				birthday = form.get( 'birthday', None )
+				schoolName = form.get( 'schoolName', None )
+				department = form.get( 'department', None )
+				grade = form.get( 'grade', None )
 
-		return False
+				insertData( personalID, userName, birthday, schoolName, department, grade )
+				return jsonify( {'EDUCATION': 'test'} )
+
+			else :
+				return jsonify( { 'error': 'error' } )
+
+		else:
+			abort(404)
+
 
 	else :
 		abort(404)
@@ -68,7 +84,7 @@ def getData( personalID ):
 	cursor = conn.cursor()
 
 	sql = 'SELECT * FROM education_data WHERE personalID=\'%s\''
-	print( sql )
+	# print( sql )
 	cursor.execute( sql % personalID )
 	data = cursor.fetchone()
 
@@ -85,6 +101,10 @@ def getData( personalID ):
 		return dict({
 				'error': 'No Such User',
 			})
+
+
+def insertData( personalID, userName, birthday, schoolName, department, grade ):
+	pass
 
 
 if __name__ == '__main__':
