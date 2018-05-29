@@ -49,7 +49,7 @@ def register() :
 				cursor.close()
 				conn.close()
 
-			return redirect('/register/')
+			return redirect('/login/')
 
 	else :
 		pass

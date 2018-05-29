@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Bootstrap Dashboard by Bootstrapious.com</title>
+    <title>登入</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Bootstrap CSS-->
@@ -49,7 +49,7 @@
               <div class="form-group text-center">
                 <input  type="submit" value="Login" class="btn btn-primary" id="submit">
               </div>
-            </form><small>沒有Taiwan ID嗎? </small><a href="/register" class="signup">註冊</a>
+            </form><small>沒有帳號嗎? </small><a href="/register" class="signup">註冊</a>
           </div>
           <div class="copyrights text-center">
             <p>Design by <a href="https://www.facebook.com/chung.h.lin.9" class="external">NTUT IFM JyunHao</a></p>
@@ -69,5 +69,14 @@
     <script src="{{ url_for('static', filename='js/jquery.mCustomScrollbar.concat.min.js') }}"></script>
     <!-- Main File-->
     <script src="{{ url_for('static', filename='js/front.js') }}"></script>
+     <script type="text/javascript">
+      {% with messages = get_flashed_messages() %} 
+        {% if messages %} 
+          {% for message in messages %}
+            alert( '{{message}}' )
+          {% endfor %} 
+        {% endif %} 
+      {% endwith %}
+    </script>
   </body>
 </html>

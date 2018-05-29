@@ -1,4 +1,4 @@
-from flask import ( Blueprint, render_template, request, redirect, session, url_for )
+from flask import ( Blueprint, render_template, request, redirect, session, url_for, flash )
 from .MYSQL import connect_to_db
 from flask_login import ( login_user, current_user, logout_user, login_required )
 from Recognition_App.models import User
@@ -24,20 +24,21 @@ def login() :
 			cursor = conn.cursor()
 
 			try:
-				sql = 'SELECT personalID, password FROM personal_data where personalID=\'%s\';' 
+				sql = 'SELECT personalID, password,userName FROM personal_data where personalID=\'%s\';' 
 				# print( sql )
 				cursor.execute( sql % personalID )
 				userLoginData = cursor.fetchone()
 
 				if userLoginData is None:
 					print( 'No Such User' )
+					flash( '無此使用者' )
 					return redirect( url_for('login.login') )
 
 				if personalID == userLoginData[0] and password == userLoginData[1] :
 					user = User()
 					user.id = personalID
 					login_user( user )
-
+					session['userName']= userLoginData[2]
 					session['logged_in'] = True
 					session['password'] = password
 
@@ -46,6 +47,7 @@ def login() :
 				else :
 					
 					print( 'Wrong Password' )
+					flash( '密碼錯誤' )
 					return redirect( url_for('login.login') )
 
 
@@ -65,6 +67,6 @@ def logout() :
 	session.pop( 'userid', None )
 	session.pop( 'password', None )
 
-	return redirect( url_for('register.register') )
+	return redirect( url_for('login.login') )
 
 

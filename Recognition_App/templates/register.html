@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Register</title>
+    <title>註冊</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Bootstrap CSS-->
@@ -33,7 +33,7 @@
       <div class="container">
         <div class="form-outer text-center d-flex align-items-center">
           <div class="form-inner">
-            <div class="logo"><span >創建你的</span><strong class="text-primary">Taiwan ID</strong></div>
+            <div class="logo"><span >創建你的</span><strong class="text-primary">ID</strong></div>
             <p style="color:#fff">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt </p>
             <form class="text-left form-validate" action="#" method="post">
               <div class="form-group-material">
@@ -48,43 +48,19 @@
                 <input id="birthday" type="date" name="birthday" required data-msg="Please enter your birthday" class="input-material">
                 <label for="birthday" class="label-material">生日</label>
               </div>
-               
-<!--               <div class="form-group-material">
-                <input id="passportID" type="text" name="passportID"  class="input-material">
-                <label for="passportID" class="label-material">護照號碼</label>
-              </div> -->
-              <!-- <div class="form-group-material">
-                <select id="marrige" name="marrige"  data-msg="Please enter your marrige" class="form-control">
-                  <option>婚姻狀況</option>
-                  <option value="0">已婚</option>
-                  <option value="1">未婚</option>
-                </select>
-                </div>
-              <div class="form-group-material">
-                <input id="family" type="text" name="family"  data-msg="Please enter your family" class="input-material">
-                <label for="family" class="label-material">家庭成員</label>
-              </div>
-              <div class="form-group-material">
-                <input id="education" type="text" name="education" data-msg="Please enter your education" class="input-material">
-                <label for="education" class="label-material">教育程度</label>
-              </div>
-              <div class="form-group-material">
-                <input id="occupation" type="text" name="occupation"  data-msg="Please enter your occupation" class="input-material">
-                <label for="occupation" class="label-material">職業</label>
-              </div> -->
               <div class="form-group-material">
                 <input id="password" type="password" name="password" required data-msg="Please enter your password" class="input-material">
                 <label for="password" class="label-material">密碼</label>
               </div>
               <div class="form-group terms-conditions text-center">
                 <input id="register-agree" name="registerAgree" type="checkbox" value="1"  required data-msg="Your agreement is required" class="form-control-custom">
-                <label for="register-agree">I agree with the terms and policy</label>
+                <label for="register-agree">我同意註冊時遵守政府政策</label>
               </div>
               <div class="form-group text-center">
                 <input  type="submit" value="註冊" class="btn btn-primary" id="submit">
                 <input  type="reset" value="清除" class="btn btn-secondary" >
               </div>
-            </form><small>已經有Taiwan ID? </small><a href="/login" class="signup">登入</a>
+            </form><small>已經有帳號? </small><a href="/login" class="signup">登入</a>
           </div>
           <div class="copyrights text-center">
             <p>Design by <a href="https://www.facebook.com/chung.h.lin.9" class="external">NTUT IFM JyunHao</a></p>
@@ -106,6 +82,14 @@
     
     <!-- Main File-->
     <script src="{{ url_for('static', filename='js/front.js') }}"></script>
- 
+   <script type="text/javascript">
+      {% with messages = get_flashed_messages() %} 
+        {% if messages %} 
+          {% for message in messages %}
+            alert( '{{message}}' )
+          {% endfor %} 
+        {% endif %} 
+      {% endwith %}
+    </script>
   </body>
 </html>

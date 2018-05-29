@@ -26,7 +26,7 @@ def index() :
 				print( 'Check Url Connection Of %s\n%s' % ( department, str( err ) ) )
 
 		print( res )
-		flash( 'Login as ' + current_user.id )
+		flash( 'Login as ' + session['userName'] )
 		session['userid'] = current_user.id
 
 		return render_template('index.html', res=res )
