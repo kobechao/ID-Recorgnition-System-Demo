@@ -44,11 +44,11 @@ def BankData( url_implement ) :
 				bankAccount = form.get( 'bankAccount', None )
 				amount = form.get( 'amount', None )
 
-				insertData( personalID, userName, birthday, bankAccount, amount )
-				return jsonify( {'BANK': 'test'} )
+				msg = insertData( personalID, userName, birthday, bankAccount, amount )
+				return jsonify( { 'BANK': msg } )
 
 			else :
-				return jsonify( { 'error': 'error' } )
+				return jsonify( { 'BANK': 'Error Routing!' } )
 
 		else:
 			abort(404)
@@ -96,7 +96,7 @@ def getData( personalID ):
 				'bankAccount': data[4], 
 				'amount': data[5],
 			})
-
+	else:
 		return dict({
 				'error': 'No Such User',
 			})
@@ -113,11 +113,16 @@ def insertData( personalID, userName, birthday, bankAccount, amount ):
 
 	except Exception as e :
 		print( e )
+		if 'Duplicate' in str(e) :
+			return "You Have Been Registered On Bank!"
+		return str(e)
+
+	else :
+		return "Apply Bank Success!!!!"
 
 	finally:
 		cursor.close()
 		conn.close()
-		return True
 
 
 if __name__ == '__main__':

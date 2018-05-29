@@ -32,7 +32,7 @@ def index() :
 		return render_template('index.html', res=res )
 	
 	else :
-		return render_template('index.html' )
+		return render_template('index.html')
 
 
 
@@ -40,20 +40,34 @@ def index() :
 @INDEX.route('/<url_institution>', methods=['GET', 'POST'] )
 def institutionRegistration( url_institution ) :
 	institution = url_institution.upper()
+
 	if current_user.is_active and session['logged_in']:
 		if request.method == 'POST':
 			form = dict(request.form)
-			# print( form )
-			res = ApiExecuter( URLS_CONF[ institution ] + '/insertUserData', getContractDBData( current_user.id ), form ).getDBRespondData()
+			print( form.get( 'password', None ), session['password'] )
+			print( type(form.get( 'password', None )), type(session['password']) )
 
-			flash( 'Apply success!')
-			return redirect( url_for('index.institutionRegistration', url_institution='bank') )
+			if form.get( 'password', None )[0] == str(session['password']) :
+				res = ApiExecuter( URLS_CONF[ institution ] + '/insertUserData', getContractDBData( current_user.id ), form ).getDBRespondData()
+				flash( res[institution] )
+
+			else :
+				flash( 'Wrong Password!')
+
+			return redirect( url_for('index.institutionRegistration', url_institution=url_institution) )
+
 
 		else :
-			res = ApiExecuter( URLS_CONF[ institution ] + '/insertUserData', getContractDBData( current_user.id ), {'userName': 'kobe', 'birthday':'1996/09/23'} ).getDBRespondData()
+			# res = ApiExecuter( URLS_CONF[ institution ] + '/insertUserData', getContractDBData( current_user.id ), {'userName': 'kobe', 'birthday':'1996/09/23'} ).getDBRespondData()
 			
 			return render_template( '%s.html' % url_institution )
 
 	else :
 		return 'NOT LOGIN'
+
+
+@INDEX.route('/profile', methods=['GET'])
+def profile() :
+	return session['userid'] + ' profile'
+
 

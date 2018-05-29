@@ -45,11 +45,11 @@ def EducationData( url_implement ) :
 				department = form.get( 'department', None )
 				grade = form.get( 'grade', None )
 
-				insertData( personalID, userName, birthday, schoolName, department, grade )
-				return jsonify( {'EDUCATION': 'test'} )
+				msg = insertData( personalID, userName, birthday, schoolName, department, grade )
+				return jsonify( {'EDUCATION': msg} )
 
 			else :
-				return jsonify( { 'error': 'error' } )
+				return jsonify( { 'EDUCATION': 'Error Routing!' } )
 
 		else:
 			abort(404)
@@ -117,11 +117,16 @@ def insertData( personalID, userName, birthday, schoolName, department, grade ):
 
 	except Exception as e :
 		print( e )
+		if 'Duplicate' in str(e) :
+			return "You Have Been Registered On Education!"
+		return str(e)
+
+	else :
+		return "Apply Education Success!!!!"
 
 	finally:
 		cursor.close()
 		conn.close()
-		return True
 
 
 if __name__ == '__main__':

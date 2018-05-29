@@ -39,6 +39,7 @@ def login() :
 					login_user( user )
 
 					session['logged_in'] = True
+					session['password'] = password
 
 					return redirect( url_for('index.index') )
 
@@ -62,6 +63,7 @@ def logout() :
 	logout_user()
 	session.pop( 'logged_in', None )
 	session.pop( 'userid', None )
+	session.pop( 'password', None )
 
 	return redirect( url_for('register.register') )
 

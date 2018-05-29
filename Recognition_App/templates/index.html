@@ -34,7 +34,7 @@
         <!-- Sidebar Header    -->
         <div class="sidenav-header d-flex align-items-center justify-content-center">
           <!-- User Info-->
-          <div class="sidenav-header-inner text-center"><a href="/profile"><img src="{{ url_for( 'static', filename='img/user-icon.png') }}" alt="person" class="img-fluid rounded-circle"></a>
+          <div class="sidenav-header-inner text-center"><a href="{{ url_for('index.profile') }}"><img src="{{ url_for( 'static', filename='img/user-icon.png') }}" alt="person" class="img-fluid rounded-circle"></a>
             <h2 class="h5" id="username">Name</h2><span></span>
           </div>
           <!-- Small Brand information, appears on minimized sidebar-->
@@ -100,10 +100,18 @@
               <div class="wrapper count-title d-flex">
                 <div class="icon"><i class="icon-user"></i></div>
                 <div class="name"><strong class="text-uppercase">{{ department }}</strong>
-                <span>{{ data['personalID'] }}</span>
-                <span>{{ data['userName'] }}</span>
                 <span>{{ session['userid']}}</span>
-                <div class="count-number">0</div>
+                <span>{{ data['userName'] }}</span>
+                <span>{{ data['birthday'] }}</span>
+                {% if department == "BANK" %}
+                <span>{{ data['amount'] }}</span>
+                <div class="count-number">{{ data['bankAccount'] }}</div>
+                {% elif department == "EDUCATION" %}
+                <span>{{ data['department'] }}</span>
+                <span>{{ data['grade'] }}</span>
+                <div class="count-number">{{ data['schoolName'] }}</div>
+                {% endif %}
+
                 </div>
               </div>
             </div>
