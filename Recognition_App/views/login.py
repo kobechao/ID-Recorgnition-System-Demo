@@ -24,7 +24,7 @@ def login() :
 			cursor = conn.cursor()
 
 			try:
-				sql = 'SELECT personalID, password,userName FROM personal_data where personalID=\'%s\';' 
+				sql = 'SELECT personalID, password, userName, birthday FROM personal_data where personalID=\'%s\';' 
 				# print( sql )
 				cursor.execute( sql % personalID )
 				userLoginData = cursor.fetchone()
@@ -41,6 +41,7 @@ def login() :
 					session['userName']= userLoginData[2]
 					session['logged_in'] = True
 					session['password'] = password
+					session['birthday'] = userLoginData[3]
 
 					return redirect( url_for('index.index') )
 

@@ -68,6 +68,7 @@ def institutionRegistration( url_institution ) :
 
 @INDEX.route('/profile', methods=['GET'])
 def profile() :
-	return session['userid'] + ' profile'
+	return render_template('profile.html')
+	# return session['userid'] + ' profile'
 
 
