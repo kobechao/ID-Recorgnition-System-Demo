@@ -98,43 +98,76 @@
         </nav>
       </header>
       <!-- Counts Section -->
-
+  {% if session.logged_in %}
       <section class="dashboard-counts section-padding">
+          <div class="container-fluid">
+        <div class="row">
+            <div class="col">
 
+              <div class="wrapper count-title d-flex">
+                
+                <div class="name">
+                  <div class="display h1">
+                    <strong class="name">姓名：{{ session['userName']}}</strong>
+                  </div>
+                  <div class="display h3">
+                    <span>Token：</span>
+                    </div>
+              </div>
+              </div>
+            </div> 
+            
+          </div>
+        </div>
       </section>
    
       <!-- Statistics Section-->
-      {% if session.logged_in %}
+    
       <section class="statistics">
+
         <div class="container-fluid">
+  
           <div class="row d-flex">
             {% for department, data in res.items() %}
 
          <!--    <span>{{ session['userid']}}</span>
             <span>{{ data['userName'] }}</span>
             <span>{{ data['birthday'] }}</span> -->
-            <div class="col-lg-4">
-              <!-- Income-->
-              <div class="card income text-center">
+           
+           
+                    {% if department == "BANK" %}
+                        {% if data['bankAccount'] == null %}
 
-               
-               <!--  <span>{{ session['userid']}}</span>
-                <span>{{ data['userName'] }}</span>
-                <span>{{ data['birthday'] }}</span> -->
-                {% if department == "BANK" %}
-                <div class="icon"><i class="fas fa-university"></i></div>
-                 <div ><strong>{{ department }}</strong>
-                <div class="number">帳戶：{{ data['amount'] }}</div>
-                <strong class="text-primary">餘額：{{ data['bankAccount'] }}</strong>
-                {% elif department == "EDUCATION" %}
-                <div class="icon"><i class="fas fa-graduation-cap"></i></div>
-                 <div ><strong >{{ department }}</strong>
-                 <div class="number">{{ data['schoolName'] }}，{{ data['department'] }}</div>
-                 <strong class="text-primary">成績：{{ data['grade'] }}</strong>
+                          {% else %}
+                            <div class="col-lg-4">
+                            <div class="card income text-center">
+                              <strong>{{ department }}</strong>
+                            <div class="icon"><i class="fas fa-university"></i></div>
+                            
+                            <div class="display h2">帳戶：{{ data['bankAccount'] }}</div>
+                            <strong class="text-primary">餘額：{{ data['amount'] }}</strong>
+                          </div>
+                        </div>
+                          {% endif %}
+                    
+                    {% elif department == "EDUCATION" %}
+                         {% if data['schoolName'] == null %}
+                        
+                          {% else %}
+                          <div class="col-lg-4">
+                            <div class="card income text-center">
+                            <strong >{{ department }}</strong>
+                            <div class="icon"><i class="fas fa-graduation-cap"></i></div>
+                            
+                            <div class="display h2">{{ data['schoolName'] }}，{{ data['department'] }}</div>
+                            <strong class="text-primary">成績：{{ data['grade'] }}</strong>
+                             </div>
+                           </div>
+                          {% endif %}
                   {% endif %}
-              </div>
-            </div>        
-          </div>
+                
+                 
+         
              {% endfor%}
         </div>
         </div>

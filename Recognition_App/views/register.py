@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect
+from flask import Blueprint, render_template, request, redirect,flash
 from .MYSQL import connect_to_db
 from Recognition_App.contract import ID_Recognition_Contract, getContractDBData
 
@@ -21,7 +21,7 @@ def register() :
 		print( 'post:', form)
 
 		if ID_Recognition_Contract.getUserRegisterTable( userID=form['personalID'] ) :
-			flash( 'Has Data' )
+			flash( '此ID已註冊過' )
 			return redirect( '/register')
 
 		else :
@@ -40,6 +40,7 @@ def register() :
 				cursor.execute( sql % ( form['personalID'], ID_Recognition_Contract.address, ID_Recognition_Contract.contractABI, registerTx ))
 
 				conn.commit()
+				flash( '註冊成功' )
 
 			except Exception as e :
 				flash( str(e) )
