@@ -3,6 +3,7 @@ from .MYSQL import connect_to_db
 from flask_login import ( login_user, current_user, logout_user, login_required )
 from Recognition_App.models import User
 
+
 LOGIN = Blueprint('login', __name__, template_folder='templates', static_folder='static')
 
 @LOGIN.route( '/login/', methods = ['GET', 'POST'] )
@@ -41,7 +42,8 @@ def login() :
 					session['userName']= userLoginData[2]
 					session['logged_in'] = True
 					session['password'] = password
-					session['birthday'] = userLoginData[3]
+					session['birthday'] = userLoginData[3].strftime("%Y-%m-%d")
+
 
 					return redirect( url_for('index.index') )
 

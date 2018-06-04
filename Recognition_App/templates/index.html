@@ -110,10 +110,22 @@
                   <div class="display h1">
                     <strong class="name">姓名：{{ session['userName']}}</strong>
                   </div>
+
                   <div class="display h3">
-                    <span>Token：</span>
-                    </div>
-              </div>
+                    <span>Applycation Token：{{ session['userToken'] }}</span>
+                  </div>
+
+                  <div class="display h3">
+                    <span><p></p><span>
+                  </div>
+
+                  <div class="display h3">
+                    <span>Please Paste Your Token</span>
+                    <input type="text" name="userToken" class="form-control" id="token_txt" placeholder="Your Token Above..." required="true">
+                    <button type="submit" class="btn btn-primary" id="token_btn">Submit</button>
+                  </div>
+                </div>
+
               </div>
             </div> 
             
@@ -127,13 +139,8 @@
 
         <div class="container-fluid">
   
-          <div class="row d-flex">
-            {% for department, data in res.items() %}
-
-         <!--    <span>{{ session['userid']}}</span>
-            <span>{{ data['userName'] }}</span>
-            <span>{{ data['birthday'] }}</span> -->
-           
+          <div class="row d-flex" id="contant_department">
+            <!-- {% for department, data in res.items() %}
            
                     {% if department == "BANK" %}
                         {% if data['bankAccount'] == null %}
@@ -168,7 +175,7 @@
                 
                  
          
-             {% endfor%}
+             {% endfor%} -->
         </div>
         </div>
       </section>
@@ -208,6 +215,7 @@
     <script src="{{ url_for('static', filename='js/front.js') }}"></script>
 
     <script type="text/javascript">
+      
       {% with messages = get_flashed_messages() %} 
         {% if messages %} 
           {% for message in messages %}
@@ -215,6 +223,45 @@
           {% endfor %} 
         {% endif %} 
       {% endwith %}
+
+      var contant_department = $('#contant_department');
+
+
+      $('#token_btn').prop('disabled', true);
+      $('#token_txt').keyup(function() {
+        if($(this).val() != '') {
+           $('#token_btn').prop('disabled', false);
+        }
+      });
+
+
+
+      $("#token_btn").click( ()=> {
+        var userToken = $("#token_txt").val();
+
+        $.ajax( {
+          url: "{{ url_for('index.getAuthorizedDepartmentData') }}",
+          data: {
+            userid: "{{ session['userid'] }}",
+            userToken: userToken
+          },
+          type: "POST",
+          success: function( response ) {
+            console.log( response );
+            if( response['message'] ) {
+              alert( response['message'] )
+            } else {
+              contant_department.hide();
+              contant_department.html( response );
+              contant_department.show(1000);
+
+            }
+          },
+          error: function( error ) {
+            console.log( error );
+          }
+        })
+      })
     </script>
  
   </body>

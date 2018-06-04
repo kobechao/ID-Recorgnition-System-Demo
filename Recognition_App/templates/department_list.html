@@ -1,0 +1,36 @@
+{% for department, data in res.items() %}
+           
+                    {% if department == "BANK" %}
+                        {% if data['bankAccount'] == null %}
+
+                          {% else %}
+                            <div class="col-lg-4">
+                            <div class="card income text-center">
+                              <strong>{{ department }}</strong>
+                            <div class="icon"><i class="fas fa-university"></i></div>
+                            
+                            <div class="display h2">帳戶：{{ data['bankAccount'] }}</div>
+                            <strong class="text-primary">餘額：{{ data['amount'] }}</strong>
+                          </div>
+                        </div>
+                          {% endif %}
+                    
+                    {% elif department == "EDUCATION" %}
+                         {% if data['schoolName'] == null %}
+                        
+                          {% else %}
+                          <div class="col-lg-4">
+                            <div class="card income text-center">
+                            <strong >{{ department }}</strong>
+                            <div class="icon"><i class="fas fa-graduation-cap"></i></div>
+                            
+                            <div class="display h2">{{ data['schoolName'] }}，{{ data['department'] }}</div>
+                            <strong class="text-primary">成績：{{ data['grade'] }}</strong>
+                             </div>
+                           </div>
+                          {% endif %}
+                  {% endif %}
+                
+                 
+         
+             {% endfor%}
